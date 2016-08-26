@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNet.Identity
+@using MVC.Scratch.Models
+@model RegisterViewModel
+
+@{
+    ViewBag.Title = "Index";
+    var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+    var currentUser = manager.FindById(User.Identity.GetUserId());
+}
+
+
+
+<h2>Your Account</h2>
+
+<p>Hello @currentUser.UserName !</p>
+<p>Email : @currentUser.Email</p>
+
+<p>What do you plan to do today ?</p> 
+
