@@ -2,6 +2,7 @@
 @using MVC.Scratch.Models
 @model RegisterViewModel
 
+@*ShortCut to user properties*@
 @{
     ViewBag.Title = "Index";
     var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
@@ -9,8 +10,9 @@
 }
 
 
-
 <h2>Your Account</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
 
 <p>Hello @currentUser.UserName !</p>
 <p>Email : @currentUser.Email</p>

@@ -17,28 +17,14 @@ namespace ASP.MVC.Scratch.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
-            /*userIdentity.AddClaim(new Claim("Username", Username));*/
             return userIdentity;
         }
-
-        /*public string Username { get; set; }*/
     }
-
-    /*public static class IdentityExtensions
-    {
-        public static string GetUsername(this IIdentity identity)
-        {
-            var claim = ((ClaimsIdentity)identity).FindFirst("Username");
-            // Test for null to avoid issues during local testing
-            return (claim != null) ? claim.Value : string.Empty;
-        }
-    }*/
-
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("Asp.Mvc.Scratch.LocalDB", throwIfV1Schema: false)
         {
         }
 

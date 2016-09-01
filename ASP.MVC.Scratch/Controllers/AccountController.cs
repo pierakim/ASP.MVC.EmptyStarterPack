@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using ASP.MVC.Scratch.App_Start;
 using ASP.MVC.Scratch.Models;
 using Microsoft.AspNet.Identity;
@@ -15,13 +16,40 @@ namespace ASP.MVC.Scratch.Controllers
 {
     public class AccountController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
+        
 
         private ApplicationUserManager _userManager;
         private ApplicationSignInManager _signInManager;
+
+        public AccountController()
+        {
+        }
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        {
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        public ActionResult Index(ManageMessageId? message)
+        {
+            ViewBag.StatusMessage =
+                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                : "";
+
+            return View();
+        }
+
+        public enum ManageMessageId
+        {
+            AddPhoneSuccess,
+            ChangePasswordSuccess,
+            SetTwoFactorSuccess,
+            SetPasswordSuccess,
+            RemoveLoginSuccess,
+            RemovePhoneSuccess,
+            Error
+        }
 
         /*REGISTER*/
 
@@ -40,7 +68,7 @@ namespace ASP.MVC.Scratch.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -78,7 +106,7 @@ namespace ASP.MVC.Scratch.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -94,9 +122,40 @@ namespace ASP.MVC.Scratch.Controllers
             }
         }
 
-        /*LogOff*/
 
-        //
+        // GET: /Account/ChangePassword
+        [AllowAnonymous]
+        public ActionResult ChangePassword(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        // POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Invalid change password attempt.");
+                return View(model);
+            }
+
+            //return RedirectToLocal(returnUrl);
+            return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+        }
+
+        /*LOGOFF*/
+
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]

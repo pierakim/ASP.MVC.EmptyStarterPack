@@ -7,13 +7,23 @@
         </div>
         @*Form Validation*@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="control-group">
+        @*<div class="control-group">
             <!-- E-mail -->
-            <label class="control-label" for="Email">E-mail</label>
+            <label class="control-label" for="Email">E-Mail</label>
             <div class="controls">
                 <input type="text" id="Email" name="Email" placeholder="" class="input-xlarge">
+                $1$Field Validation for eMail#1#
+                @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+            </div>
+        </div>*@
+
+        <div class="control-group">
+            <!-- Username -->
+            <label class="control-label" for="Email">UserName</label>
+            <div class="controls">
+                <input type="text" id="UserName" name="UserName" placeholder="" class="input-xlarge">
                 @*Field Validation for eMail*@
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
             </div>
         </div>
 
