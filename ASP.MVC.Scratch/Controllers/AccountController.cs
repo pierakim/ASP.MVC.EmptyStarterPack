@@ -16,8 +16,6 @@ namespace ASP.MVC.Scratch.Controllers
 {
     public class AccountController : Controller
     {
-        
-
         private ApplicationUserManager _userManager;
         private ApplicationSignInManager _signInManager;
 

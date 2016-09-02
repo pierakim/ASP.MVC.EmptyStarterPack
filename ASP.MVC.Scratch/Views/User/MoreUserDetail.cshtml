@@ -1,0 +1,58 @@
+﻿@model MVC.Scratch.Models.tb_UserDetails
+<form class="form-horizontal" action='' method="POST">
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <div id="legend">
+            <legend class="">Provide your details here</legend>
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <p class="text-success">@ViewBag.StatusMessage</p>
+        <div class="control-group">
+            <!-- Age -->
+            <label class="control-label" for="Age">Age</label>
+            <div class="controls">
+                <input type="text" id="Age" name="Age" placeholder="" class="input-xlarge">
+                @*Field Validation for Age*@
+                @Html.ValidationMessageFor(m => m.Age, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Address-->
+            <label class="control-label" for="Address">Address</label>
+            <div class="controls">
+                <input type="text" id="Address" name="Address" placeholder="" class="input-xlarge">
+                @*Field Validation for Address*@
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- City-->
+            <label class="control-label" for="Phone">City</label>
+            <div class="controls">
+                <input type="text" id="City" name="City" placeholder="" class="input-xlarge">
+                @*Field Validation for City*@
+                @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Phone-->
+            <label class="control-label" for="Phone">Phone</label>
+            <div class="controls">
+                <input type="text" id="Phone" name="Phone" placeholder="" class="input-xlarge">
+                @*Field Validation for Phone*@
+                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+                <input type="submit" class="btn btn-info" value="OK" onclick="location.href = '@Url.Action("MoreUserDetail", "User")'" />
+            </div>
+        </div>
+    </fieldset>
+</form>

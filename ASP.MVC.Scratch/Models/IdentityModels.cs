@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -26,7 +27,12 @@ namespace ASP.MVC.Scratch.Models
         public ApplicationDbContext()
             : base("Asp.Mvc.Scratch.LocalDB", throwIfV1Schema: false)
         {
+            //If Model change
+            Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>());
         }
+
+        //New Entity Tables - Code First Approach
+        public DbSet<tb_UserDetails> UsersDetails { get; set; }
 
         public static ApplicationDbContext Create()
         {
