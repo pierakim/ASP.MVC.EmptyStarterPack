@@ -46,14 +46,21 @@ namespace ASP.MVC.Scratch.Controllers
             UserManager = userManager;
         }
 
-        public ActionResult Index(ManageMessageId? message)
+        public ActionResult Index(ManageMessageId? message, tb_UserDetails model)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.UpdateDetailInformation ? "Your details have been updated."
                :message == ManageMessageId.ErrorUpdateDetailInformation ? "Error during update."
                : "";
 
-            return View();
+            var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+
+            model = (from s in db.UsersDetails
+                     where s.UserId == currentUser.Id
+                     select s).FirstOrDefault();
+
+            return View(model);
         }
 
         [Authorize]

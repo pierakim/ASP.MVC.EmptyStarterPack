@@ -1,19 +1,27 @@
 ﻿@using Microsoft.AspNet.Identity
 @using MVC.Scratch.Models
-@model RegisterViewModel
+@model tb_UserDetails
 
 @*ShortCut to user properties*@
 @{
     ViewBag.Title = "Index";
     var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
-    var currentUser = manager.FindById(User.Identity.GetUserId());
+    var currentUser = manager.FindById(User.Identity.GetUserId()); 
 }
 
 
-<h2>Your personnal details</h2>
+<h2>Information:</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 
 <p>Hello @currentUser.UserName ! Here is the place where you can manage your details</p>
 <p>Feel free to complete your profile <a class="btn-link" value="Continue?" onclick="location.href = '@Url.Action("MoreUserDetail", "User")'">here</a> !</p>
 
+<h2>Your personnal details:</h2>
+
+<p>Name: @currentUser.UserName</p>
+<p>eMail: @currentUser.Email</p>
+<p>Age: @Model.Age </p>  
+<p>Address: @Model.Address</p> 
+<p>City: @Model.City</p> 
+<p>Phone: @Model.Phone</p>
