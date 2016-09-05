@@ -14,9 +14,10 @@ namespace ASP.MVC.Scratch.Controllers
 {
     public class UserController : Controller
     {
+        //OwinContext is shared across your entire application. :)
         private ApplicationUserManager _userManager;
         private ApplicationSignInManager _signInManager;
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public UserController()
         {
@@ -53,10 +54,11 @@ namespace ASP.MVC.Scratch.Controllers
                :message == ManageMessageId.ErrorUpdateDetailInformation ? "Error during update."
                : "";
 
+            //return 2 models with Partial/.. instead of this
             var manager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(new ApplicationDbContext()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
 
-            model = (from s in db.UsersDetails
+            model = (from s in _db.UsersDetails
                      where s.UserId == currentUser.Id
                      select s).FirstOrDefault();
 
@@ -84,7 +86,7 @@ namespace ASP.MVC.Scratch.Controllers
             //is there an user?
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             //user detail already provided?
-            var userDetails = db.UsersDetails.Any(w => w.UserId == user.Id);
+            var userDetails = _db.UsersDetails.Any(w => w.UserId == user.Id);
 
             if (user != null)
             {
@@ -92,14 +94,14 @@ namespace ASP.MVC.Scratch.Controllers
                 { 
                     //New UserDetails
                     var newUserDetail = new tb_UserDetails {UserId = user.Id,  Age = model.Age, Address = model.Address, City = model.City, Phone = model.Phone };
-                    db.UsersDetails.Add(newUserDetail);
-                    db.SaveChanges();
+                    _db.UsersDetails.Add(newUserDetail);
+                    _db.SaveChanges();
                     return RedirectToAction("Index", new { Message = ManageMessageId.UpdateDetailInformation });
                 }
                 else
                 {
                     //Existing userDetails
-                    var existingUserDetails = (from s in db.UsersDetails
+                    var existingUserDetails = (from s in _db.UsersDetails
                                               where s.UserId == user.Id
                                               select s).FirstOrDefault();
                     //New data
@@ -113,9 +115,9 @@ namespace ASP.MVC.Scratch.Controllers
                         if (existingUserDetails != null) existingUserDetails.Phone = model.Phone;
 
                     //Update
-                    db.UsersDetails.Attach(existingUserDetails);
-                    db.Entry(existingUserDetails).State=EntityState.Modified;
-                    db.SaveChanges();
+                    _db.UsersDetails.Attach(existingUserDetails);
+                    _db.Entry(existingUserDetails).State=EntityState.Modified;
+                    _db.SaveChanges();
                     return RedirectToAction("Index", new { Message = ManageMessageId.UpdateDetailInformation });
                 }
             }

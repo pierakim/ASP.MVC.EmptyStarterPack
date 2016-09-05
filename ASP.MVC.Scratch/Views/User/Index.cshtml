@@ -2,6 +2,7 @@
 @using MVC.Scratch.Models
 @model tb_UserDetails
 
+@*Do it from controller...*@
 @*ShortCut to user properties*@
 @{
     ViewBag.Title = "Index";
@@ -15,7 +16,6 @@
 <p class="text-success">@ViewBag.StatusMessage</p>
 
 <p>Hello @currentUser.UserName ! Here is the place where you can manage your details</p>
-<p>Feel free to complete your profile <a class="btn-link" value="Continue?" onclick="location.href = '@Url.Action("MoreUserDetail", "User")'">here</a> !</p>
 
 <h2>Your personnal details:</h2>
 
@@ -23,5 +23,7 @@
 <p>eMail: @currentUser.Email</p>
 <p>Age: @Model.Age </p>  
 <p>Address: @Model.Address</p> 
-<p>City: @Model.City</p> 
+<p>City: @Model.City</p>
 <p>Phone: @Model.Phone</p>
+<br>
+<p>Feel free to complete your profile <a class="btn-link" value="Continue?" onclick="location.href = '@Url.Action("MoreUserDetail", "User")'">here</a> !</p>

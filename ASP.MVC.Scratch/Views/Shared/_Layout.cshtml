@@ -38,6 +38,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <ul class="nav navbar-nav navbar-right">
+                            <li>@Html.ActionLink("Roles Manager", "Index", "Roles")</li>
                             <li>@Html.ActionLink("Manage your details", "Index", "User")</li>
                             <li>@Html.ActionLink("Change Password", "ChangePassword", "Account")</li>
                             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
