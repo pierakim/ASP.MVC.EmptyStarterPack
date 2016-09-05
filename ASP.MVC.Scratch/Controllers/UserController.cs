@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -62,7 +63,7 @@ namespace ASP.MVC.Scratch.Controllers
             return View();
         }
 
-        // POST: /Account/Login
+        // POST: /User/MoreUserDetail
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -73,14 +74,43 @@ namespace ASP.MVC.Scratch.Controllers
                 return View(model);
             }
 
+            //is there an user?
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var id = user.Id;
+            //user detail already provided?
+            var userDetails = db.UsersDetails.Any(w => w.UserId == user.Id);
+
             if (user != null)
             {
-                var record = new tb_UserDetails {UserId = id,  Age = 30, Address ="35 boundary St.", City = "Brisbane", Phone = 0480254785 };
-                db.UsersDetails.Add(record);
-                db.SaveChanges();
-                return RedirectToAction("Index", new { Message = ManageMessageId.UpdateDetailInformation });
+                if(!userDetails)
+                { 
+                    //New UserDetails
+                    var newUserDetail = new tb_UserDetails {UserId = user.Id,  Age = model.Age, Address = model.Address, City = model.City, Phone = model.Phone };
+                    db.UsersDetails.Add(newUserDetail);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { Message = ManageMessageId.UpdateDetailInformation });
+                }
+                else
+                {
+                    //Existing userDetails
+                    var existingUserDetails = (from s in db.UsersDetails
+                                              where s.UserId == user.Id
+                                              select s).FirstOrDefault();
+                    //New data
+                    if (model.Age != null)
+                        if (existingUserDetails != null) existingUserDetails.Age = model.Age;
+                    if (model.Address != null)
+                        if (existingUserDetails != null) existingUserDetails.Address = model.Address;
+                    if (model.City != null)
+                        if (existingUserDetails != null) existingUserDetails.City = model.City;
+                    if (model.Phone != null)
+                        if (existingUserDetails != null) existingUserDetails.Phone = model.Phone;
+
+                    //Update
+                    db.UsersDetails.Attach(existingUserDetails);
+                    db.Entry(existingUserDetails).State=EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { Message = ManageMessageId.UpdateDetailInformation });
+                }
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.ErrorUpdateDetailInformation });
         }

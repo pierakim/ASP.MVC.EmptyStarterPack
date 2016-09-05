@@ -28,7 +28,7 @@ namespace ASP.MVC.Scratch.Models
             : base("Asp.Mvc.Scratch.LocalDB", throwIfV1Schema: false)
         {
             //If Model change
-            Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>());
+            //Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>());
         }
 
         //New Entity Tables - Code First Approach
