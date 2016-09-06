@@ -116,7 +116,7 @@ namespace ASP.MVC.Scratch.Controllers
             }
             else
             {
-                ViewBag.ResultRoleAddToUser = "Impossible to create this role for this User. User doesn't exist or roles selected.";
+                ViewBag.ResultRoleAddToUser = "Impossible to create this role for this User. User doesn't exist / no roles selected.";
             }
                
             // prepopulat roles for the view dropdown
@@ -127,7 +127,7 @@ namespace ASP.MVC.Scratch.Controllers
         }
 
         //
-        // GET: /Roles
+        // GET: /GetRoles
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult GetRoles(string UserName)
@@ -144,7 +144,10 @@ namespace ASP.MVC.Scratch.Controllers
                     ViewBag.RolesForThisUserInError = "Impossible to load roles. User doesn't exist.";
                 }
             }
-
+            else
+            {
+                ViewBag.RolesForThisUserInError = "Enter an user to attribute a role.";
+            }
             // prepopulat roles for the view dropdown
             var list = _db.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
                 ViewBag.Roles = list;
