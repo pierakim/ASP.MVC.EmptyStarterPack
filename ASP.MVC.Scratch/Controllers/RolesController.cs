@@ -116,7 +116,17 @@ namespace ASP.MVC.Scratch.Controllers
             }
             else
             {
-                ViewBag.ResultRoleAddToUser = "Impossible to create this role for this User. User doesn't exist / no roles selected.";
+                if (string.IsNullOrEmpty(userName))
+                {
+                    ViewBag.ResultRoleAddToUser = "Enter a valid user to add roles.";
+                }
+                else
+                {
+                    if (user == null)
+                    {
+                        ViewBag.ResultRoleAddToUser = "This user doesn't exist.";
+                    }
+                }
             }
                
             // prepopulat roles for the view dropdown
@@ -170,7 +180,14 @@ namespace ASP.MVC.Scratch.Controllers
             }
             else
             {
-                ViewBag.ResultDeleteRoleForUser = "This user doesn't belong to selected role or user doesn't exist.";
+                if (string.IsNullOrEmpty(UserName))
+                {
+                    ViewBag.ResultDeleteRoleForUser = "Enter a valid user to delete roles.";
+                }
+                else
+                {
+                    ViewBag.ResultDeleteRoleForUser = user == null ? "This user doesn't exist." : "This user doesn't belong to selected role.";
+                }
             }
             // prepopulat roles for the view dropdown
             var list = _db.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
